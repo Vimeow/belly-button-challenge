@@ -252,5 +252,126 @@ init()
 
 // Bonus (ref: https://plotly.com/javascript/gauge-charts/)
 function gaugeChart(selectedID){
+  d3.json(url).then(function(data){
+    // Select metadata in the data
+    let metaData = data.metadata;
+    console.log("metadata: ", metaData);
 
+    // Filter samples by using the selected ID (Vy's note: the id stored in meta.id is string, but the selectedID is in interger, therefore using '==' to compare loosely the data values and ignore the data type)
+    let filteredSample = metaData.filter((meta) => meta.id == selectedID);
+
+    // Assign filtered sample data of the first ID to an object variable:
+    let object = filteredSample[0];
+    console.log("object: ", object)
+
+    //Use wfreg as the value for the gauge chart
+    let value = object.wfreg;
+
+    //Create a trace for the gauge chart
+    // let trace1 = {
+    //     domain: { x: [0, 1], y: [0, 1] },
+    //     value: value,
+    //     // text: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"],
+    //     title: { text: "<b>Belly button washing frequency<b><br>Scrubs per Week", font: {size: 20}},
+    //     type: "indicator", 
+    //     mode: "gauge+number+delta",
+    //     gauge: {
+    //         axis: {range: [null, 10]}, 
+    //         bar: {color: "rgb(9,133,44)"},
+    //         steps: [
+    //             { range: [0, 1], color: "rgb(237, 242, 239)" },
+    //             { range: [1, 2], color: "rgb(218, 242, 228)" },
+    //             { range: [2, 3], color: "rgb(198, 247, 218)" },
+    //             { range: [3, 4], color: "rgb(179, 252, 209)" },
+    //             { range: [4, 5], color: "rgb(154, 252, 194)" },
+    //             { range: [5, 6], color: "rgb(133, 255, 183)" },
+    //             { range: [6, 7], color: "rgb(110, 255, 169)" },
+    //             { range: [7, 8], color: "rgb(87, 255, 155)" },
+    //             { range: [8, 9], color: "rgb(66, 252, 141)" },
+    //             { range: [9, 10], color: "rgb(35, 250, 122)" }
+    //         ]
+    //     }
+    // }
+
+    //Create a trace for the gauge chart
+   let trace1 = {
+      type: "pie",
+      showlegend: false,
+      hole: 0.4,
+      rotation: 90,
+      values: [100 / 9, 100 / 9, 100 / 9, 100 / 9, 100 / 9, 100 / 9, 100 / 9, 100 / 9, 100 / 9, 100],
+      text: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", ""],
+      direction: "clockwise",
+      textinfo: "text",
+      textposition: "inside",
+      marker: {
+        colors: ["rgb(237, 242, 239)", 
+          "rgb(218, 242, 228)",
+          "rgb(198, 247, 218)",
+          "rgb(179, 252, 209)",
+          "rgb(154, 252, 194)", 
+          "rgb(133, 255, 183)", 
+          "rgb(110, 255, 169)", 
+          "rgb(87, 255, 155)", 
+          "rgb(66, 252, 141)", 
+          "white"]
+      },
+      labels: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", ""],
+      hoverinfo: "none",
+      domain: {"x": [0, 0.48]}
+    };
+
+
+    //
+    // var degrees = 115, radius = .6;
+    // var radians = degrees * Math.PI / 180;
+    // var x = -1 * radius * Math.cos(radians);
+    // var y = radius * Math.sin(radians);
+    // //
+    //  layout = {
+    //   shapes:[{
+    //       type: 'line',
+    //       x0: 0,
+    //       y0: 0,
+    //       x1: x,
+    //       y1: 0.5,
+    //       line: {
+    //         color: 'black',
+    //         width: 8
+    //       }
+    //     }],
+    //   title: 'Number of Printers Sold in a Week',
+    //   xaxis: {visible: false, range: [-1, 1]},
+    //   yaxis: {visible: false, range: [-1, 1]}
+    // };
+
+
+    //
+
+    layout = {
+      shapes: [
+        {
+          type: 'path',
+          path: 'M 0.235 0.5 L 0.24 0.65 L 0.245 0.5 Z',
+          fillcolor: 'rgba(44, 160, 101, 0.5)',
+          line: {
+              'width': 0.8
+          },
+          xref: 'paper',
+          yref: 'paper',
+          hoverinfo: value
+        }
+      ],
+    }
+
+    //
+
+
+    // Create a data array for the bar chart
+    let dataArray = [trace1];
+    console.log("trace1: ", dataArray)
+
+     // Render the plot to the div tag with id "gauge"
+    Plotly.newPlot("gauge", dataArray, layout);
+    })
 }
