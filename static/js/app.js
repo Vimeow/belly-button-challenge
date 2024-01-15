@@ -2,7 +2,7 @@
 //The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare.
 
 
-//--------------------//
+//--------------------//DONE
 
 
 // 1. Use the D3 library to read in samples.json from the URL https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json.
@@ -16,7 +16,7 @@ d3.json(url).then(function(data) {
   });
 
 
-//--------------------//
+//--------------------//DONE
 
 
 // Display the default plots
@@ -47,12 +47,12 @@ function init() {
     //Call the function to create a  horizontal bar chart, a bubble chart, gaugeChart and an individual's demographic information:
     hbarChart(id);
     bubbleChart(id);
-    // gaugeChart(id);
-    // demographic(id);
+    gaugeChart(id);
+    demographic(id);
   });
 }
 
-//--------------------//
+//--------------------//DONE
 
 
 // 2. Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
@@ -67,8 +67,9 @@ function hbarChart(selectedID){
 
     // Assign filtered sample data of the first ID to an object variable:
     let object = filteredSample[0];
+    console.log("object: ", object)
 
-     //Create bar chart elements (note: using slice() to extract the first 10 OTUs found in each individual)
+     //Create bar chart elements (Vy's note: using slice() to extract the first 10 OTUs found in each individual)
     
     //Use sample_values as the values for the bar chart
      let x = object.sample_values.slice(0, 10).reverse();
@@ -115,7 +116,7 @@ function hbarChart(selectedID){
 }
 
 
-//--------------------//
+//--------------------//DONE
 
 
 // 3. Create a bubble chart that displays each sample.
@@ -166,7 +167,7 @@ function bubbleChart(selectedID){
       }
     };
 
-    // Create a data array for the bar chart
+    // Create a data array for the bubble chart
     let dataArray = [trace1];
     console.log("trace1: ", dataArray)
 
@@ -189,13 +190,67 @@ function bubbleChart(selectedID){
   })
 }
 
-//--------------------//
+
+//--------------------//DONE
+
+
+// 4. Display the sample metadata, i.e., an individual's demographic information.
+// 5. Display each key-value pair from the metadata JSON object somewhere on the page.
+function demographic(selectedID){
+  d3.json(url).then(function(data){
+    // Select metadata in the data
+    let metaData = data.metadata;
+    console.log("metaData: ", metaData)
+
+    // Filter samples by using the selected ID (Vy's note: the id stored in meta.id is string, but the selectedID is in interger, therefore using '==' to compare loosely the data values and ignore the data type)
+    let filteredMetaData = metaData.filter((meta) => meta.id == selectedID);
+
+    // Assign filtered sample data of the first ID to an object variable:
+    let object = filteredMetaData[0];
+    console.log("object: ", object)
+
+    // Clear the child elements in div with selectedID
+    d3.select("#sample-metadata").html("");
+    console.log("html object:", d3.select("#sample-metadata"))
+
+    
+    //"The Object.entries() static method returns an array of a given object's own enumerable string-keyed property key-value pairs" (ref = https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries)
+    let entries = Object.entries(object);
+    console.log("entries: ", entries)
+
+    entries.forEach(([key, value]) => {
+      d3.select("#sample-metadata").append ("h4").text(`${key}: ${value}`);
+    });
+  }); 
+}
+
+
+//--------------------//DONE
 
 
 // 6. Update all the plots when a new sample is selected. Additionally, you are welcome to create any layout that you would like for your dashboard.
 
 function optionChanged(selectedID) {
-  hbarChart(selectedID)
+  hbarChart(selectedID);
+  bubbleChart(selectedID);
+  demographic(selectedID);
+  gaugeChart(selectedID)
+  
 }
 
 init()
+
+
+//--------------------//
+
+
+// 7. Deploy your app to a free static page hosting service, such as GitHub Pages. Submit the links to your deployment and your GitHub repo. Ensure that your repository has regular commits and a thorough README.md file
+
+
+//--------------------//
+
+
+// Bonus (ref: https://plotly.com/javascript/gauge-charts/)
+function gaugeChart(selectedID){
+
+}
