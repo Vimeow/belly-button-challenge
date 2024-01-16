@@ -1,3 +1,8 @@
+//Aims: Building a gauge chart to display the Belly Button Wash Frequency
+
+
+//--------------------//
+
 
 // Display the default plots:
 function init() {
@@ -14,7 +19,7 @@ function init() {
       console.log("idList: ", idList);
   
       // Add the idList into the dropdownMenu
-      // iterate through the idList -> 
+      // iterate through the idList using forEach()-> 
       // append each id as an "option" to the dropdownMenu
       idList.forEach((id) => {
         dropdownMenu.append("option").text(id).property("value", id);
@@ -24,16 +29,18 @@ function init() {
       let id = idList[0]
       console.log("First id: ", id)
   
-      //Call the function to create a gaugeChart:
+      //Call the function to create an intitial gaugeChart:
       gaugeChart(id);
     });
 }
 
+// Call the initialize function
+init();
 
 //--------------------//
 
 
-// Bonus gauge chart (ref: https://plotly.com/javascript/gauge-charts/)
+// Creating a gauge chart (ref: https://plotly.com/javascript/gauge-charts/)
 
 function gaugeChart(selectedID){
     d3.json(url).then(function(data){
@@ -44,7 +51,7 @@ function gaugeChart(selectedID){
       // Filter samples by using the selected ID (Vy's note: the id stored in meta.id is string, but the selectedID is in interger, therefore using '==' to compare loosely the data values and ignore the data type)
       let filteredSample = metaData.filter((meta) => meta.id == selectedID);
   
-      // Assign filtered sample data of the first ID to an object variable:
+      // Assign the first index in the filtered sample data to an object variable:
       let object = filteredSample[0];
       console.log("object: ", object)
   
@@ -86,7 +93,7 @@ function gaugeChart(selectedID){
         height: 500
       };
   
-      // Render the plot to the div tag with id "bar"
+      // Render the plot to the div tag with id "gauge"
       Plotly.newPlot('gauge', dataArray, layout);
     });
   };
@@ -95,12 +102,10 @@ function gaugeChart(selectedID){
 //--------------------//
 
 
-// Update the chart when a new sample is selected
+// Update the chart when a new sample ID is selected
 function optionChanged(selectedID) {gaugeChart(selectedID)};
 
 
 //--------------------//
 
-
-// Call the initialize function
-init();
+//END
