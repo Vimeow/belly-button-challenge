@@ -47,7 +47,8 @@ function init() {
     //Call the function to create a  horizontal bar chart, a bubble chart and an individual's demographic information:
     hbarChart(id);
     bubbleChart(id);
-    demographic(id);
+    gaugeChart(id);
+    demographic(id)
   });
 }
 
@@ -105,7 +106,7 @@ function hbarChart(selectedID){
 
     // Create a layout for the chart
     let layout = {
-      title: "The top 10 OTUs found in the individual",
+      title: "<b>The top 10 OTUs found in the individual<b>",
       margin: {
         l: 100,
         r: 100,
@@ -195,6 +196,68 @@ function bubbleChart(selectedID){
 //--------------------//
 
 
+// Creating a gauge chart (ref: https://plotly.com/javascript/gauge-charts/)
+
+function gaugeChart(selectedID){
+  d3.json(url).then(function(data){
+    // Select metadata in the data
+    let metaData = data.metadata;
+    console.log("metadata: ", metaData);
+
+    // Filter samples by using the selected ID (Vy's note: the id stored in meta.id is string, but the selectedID is in interger, therefore using '==' to compare loosely the data values and ignore the data type)
+    let filteredSample = metaData.filter((meta) => meta.id == selectedID);
+
+    // Assign the first index in the filtered sample data to an object variable:
+    let object = filteredSample[0];
+    console.log("object: ", object)
+
+    // Use wfreg as the value for the gauge chart
+    let value = object.wfreq
+    console.log("Wash frequency: ", value)
+
+    // Create a trace for the gauge chart
+    // Color picker ref: https://www.w3schools.com/colors/colors_picker.asp
+    let trace1 = {
+      domain: { x: [0, 1], y: [0, 1] },
+      value: value,
+      title: { text: "<b>Belly Button Washing Frequency</b><br>Scrubs per Week" },
+      type: "indicator",
+      mode: "gauge+number",
+      gauge: { axis: {range: [0,10], tickmode: "linear", tick0: 2, dtick: 2},
+        bar: {color: "black"},
+        steps: [
+          {range: [0, 1], color: "#ffffff"},
+          {range: [1, 2], color: "#ffcce6"},
+          {range: [2, 3], color: "#ff99cc"},
+          {range: [3, 4], color: "#ff66b3"},
+          {range: [4, 5], color: "#ff3399"},
+          {range: [5, 6], color: "#ff0080"},
+          {range: [6, 7], color: "#cc0066"},
+          {range: [7, 8], color: "#99004d"},
+          {range: [8, 9], color: "#660033"},
+          {range: [9, 10], color: "#33001a"},
+      ]}
+    };
+
+    // Create a data array for the gauge chart
+    let dataArray = [trace1];
+    console.log("trace1: ", dataArray)
+
+    // Create a layout for the chart
+    var layout = {
+      width: 600,
+      height: 500
+    };
+
+    // Render the plot to the div tag with id "gauge"
+    Plotly.newPlot('gauge', dataArray, layout);
+  });
+};
+
+
+//--------------------//
+
+
 // 4. Display the sample metadata, i.e., an individual's demographic information.
 // 5. Display each key-value pair from the metadata JSON object somewhere on the page.
 function demographic(selectedID){
@@ -234,6 +297,7 @@ function demographic(selectedID){
 function optionChanged(selectedID) {
   hbarChart(selectedID);
   bubbleChart(selectedID);
+  gaugeChart(selectedID);
   demographic(selectedID)
 };
 
