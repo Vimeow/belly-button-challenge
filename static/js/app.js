@@ -243,7 +243,7 @@ function optionChanged(selectedID) {
 
 // 7. Deploy the app to a free static page hosting service, such as GitHub Pages
 
-//https://vimeow.github.io/belly-button-challenge/
+// https://vimeow.github.io/belly-button-challenge/
 
 
 //--------------------//
